@@ -1,57 +1,56 @@
-"""Data loading utilities for the Ethiopia financial inclusion dataset."""
+"""Data loading utilities for the Ethiopia financial inclusion dataset.
+
+Primary entrypoint is CSV, per the assignment's Project Structure specification:
+- data/raw/ethiopia_fi_unified_data.csv
+- data/raw/ethiopia_fi_unified_data_impact.csv
+- data/raw/reference_codes.csv
+"""
 
 from pathlib import Path
 import pandas as pd
 
 
-def load_unified_dataset(file_path):
-    """Load the unified data and impact sheets from the Ethiopia FI dataset.
+def load_unified_dataset(data_dir):
+    """Load the unified data, impact, and reference code CSVs.
 
     Parameters
     ----------
-    file_path : str or Path
-        Path to the .xlsx file containing 'ethiopia_fi_unified_data' and
-        'Impact_sheet' sheets.
+    data_dir : str or Path
+        Directory containing ethiopia_fi_unified_data.csv,
+        ethiopia_fi_unified_data_impact.csv, and reference_codes.csv.
 
     Returns
     -------
-    tuple of (pd.DataFrame, pd.DataFrame)
-        (data_df, impact_df)
+    tuple of (pd.DataFrame, pd.DataFrame, pd.DataFrame)
+        (data_df, impact_df, reference_df)
 
     Raises
     ------
     FileNotFoundError
-        If file_path does not exist.
-    ValueError
-        If the expected sheets are missing from the file.
+        If any required CSV is missing from data_dir.
     """
-    file_path = Path(file_path)
-    if not file_path.exists():
-        raise FileNotFoundError(
-            f"Dataset not found at {file_path}. "
-            f"Place the starter file in data/raw/ before running this notebook."
-        )
+    data_dir = Path(data_dir)
+    required_files = {
+        "data": "ethiopia_fi_unified_data.csv",
+        "impact": "ethiopia_fi_unified_data_impact.csv",
+        "reference": "reference_codes.csv",
+    }
 
-    try:
-        xls = pd.ExcelFile(file_path)
-    except Exception as e:
-        raise ValueError(f"Could not open {file_path} as an Excel file: {e}")
-
-    required_sheets = {"ethiopia_fi_unified_data", "Impact_sheet"}
-    missing = required_sheets - set(xls.sheet_names)
+    missing = [f for f in required_files.values() if not (data_dir / f).exists()]
     if missing:
-        raise ValueError(
-            f"Expected sheet(s) {missing} not found in {file_path}. "
-            f"Found sheets: {xls.sheet_names}"
+        raise FileNotFoundError(
+            f"Missing required file(s) in {data_dir}: {missing}. "
+            f"Place all three CSVs in data/raw/ before running this notebook."
         )
 
-    data_df = pd.read_excel(file_path, sheet_name="ethiopia_fi_unified_data")
-    impact_df = pd.read_excel(file_path, sheet_name="Impact_sheet")
-    return data_df, impact_df
+    data_df = pd.read_csv(data_dir / required_files["data"])
+    impact_df = pd.read_csv(data_dir / required_files["impact"])
+    reference_df = pd.read_csv(data_dir / required_files["reference"])
+    return data_df, impact_df, reference_df
 
 
 def get_observations(data_df):
-    """Return only the observation-type records, with observation_date parsed
+    """Return only observation-type records, with observation_date parsed
     as datetime (handles mixed string/datetime values from enrichment)."""
     if "record_type" not in data_df.columns:
         raise ValueError("data_df is missing the required 'record_type' column.")

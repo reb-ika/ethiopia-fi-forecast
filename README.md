@@ -31,11 +31,16 @@ since they contain client-provided data. To reproduce this analysis, place
 | Interim Report | — | [`reports/interim_report.docx`](reports/interim_report.docx) |
 
 ## Setup
-
+```**Required raw data files** (place in `data/raw/` before running notebooks):
+- `ethiopia_fi_unified_data.csv`
+- `ethiopia_fi_unified_data_impact.csv`
+- `reference_codes.csv`
+```
 ```powershell
 python -m venv venv
 .\venv\Scripts\Activate.ps1
 pip install -r requirements.txt
+
 ```
 ## Running the Dashboard
 

@@ -12,10 +12,11 @@ st.set_page_config(page_title="Ethiopia Financial Inclusion Dashboard", layout="
 
 # ---------- Data loading (cached so it only runs once per session) ----------
 @st.cache_data
+@st.cache_data
 def load_data():
-    data_df, impact_df = load_unified_dataset(
-        Path(__file__).resolve().parent.parent / "data" / "processed" / "ethiopia_fi_unified_data_enriched.xlsx"
-    )
+    processed_path = Path(__file__).resolve().parent.parent / "data" / "processed" / "ethiopia_fi_unified_data_enriched.xlsx"
+    data_df = pd.read_excel(processed_path, sheet_name="ethiopia_fi_unified_data")
+    impact_df = pd.read_excel(processed_path, sheet_name="Impact_sheet")
     obs_df = get_observations(data_df)
     events_df = data_df[data_df["record_type"] == "event"].copy()
     events_df["observation_date"] = pd.to_datetime(events_df["observation_date"], errors="coerce")
