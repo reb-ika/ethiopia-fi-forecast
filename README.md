@@ -37,7 +37,14 @@ python -m venv venv
 .\venv\Scripts\Activate.ps1
 pip install -r requirements.txt
 ```
+## Running the Dashboard
 
+```powershell
+.\venv\Scripts\Activate.ps1
+streamlit run dashboard\app.py
+```
+
+Then open http://localhost:8501 in your browser. Requires `data/processed/ethiopia_fi_unified_data_enriched.xlsx` to exist (produced by `notebooks/01_data_exploration.ipynb`).
 ## Author
 
 Rebika Woldeyesus 
