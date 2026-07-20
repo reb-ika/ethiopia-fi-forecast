@@ -1,0 +1,4 @@
+date,access_pessimistic,access_base,access_optimistic,access_event_augmented,usage_mm_account_forecast
+2025-12-31,50.1,52.3,54.4,53.8,16.7
+2026-12-31,51.1,54.2,57.2,55.7,23.2
+2027-12-31,52.2,56.0,59.9,57.5,32.3
